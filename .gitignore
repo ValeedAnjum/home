@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-; /.gits
+/.gits
 /.pnp
 .pnp.js
 
