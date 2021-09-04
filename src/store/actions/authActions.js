@@ -9,12 +9,6 @@ export const loadUser = () => async (dispatch) => {
       // const res = await axios.get("/auth/user");
       const res = await axios.get(`${base}/auth/user`);
       dispatch({ type: "SET_PROFILE", payload: res.data });
-      // dispatch({ type: "LOGIN_SUCCESS", payload: localStorage.token });
-      // dispatch({ type: "AsynchronousSuccess" });
-      // dispatch({
-      //   type: "DispalyNotifier",
-      //   payload: { type: "success", msg: "Login successfully" },
-      // });
     }
   } catch (error) {
     console.log(error);
@@ -60,7 +54,6 @@ export const signIn =
       dispatch(loadUser());
       return true;
     } catch (err) {
-      console.log("c");
       return false;
     }
   };

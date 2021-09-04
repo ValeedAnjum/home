@@ -4,8 +4,6 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 import MenuForMoreVideoCardOptions from "./MenuForMoreVideoCardOptions";
-// import MenuForMoreVideoCardOptions from "./MenuForMoreVideoCardOptions";
-// import MenuForMoreVideoCardOptions from "../modelManager/miniPlayer/MenuForMoreVideoCardOptions";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -91,22 +89,21 @@ const MiniVideoCard = ({
           className={classes.imgCon}
           onClick={() => videoCardClickHan({ title, id })}
         >
-          <img src={img} width="100%" height="100%" />
+          <img src={img} width="100%" height="100%" alt={title} />
         </Grid>
         <Grid
           item
           xs={8}
           container
           direction="column"
-          // justifyContent="space-between"
           onClick={() => videoCardClickHan({ title, id })}
           className={classes.titleAndChannelName}
         >
           <Grid item className={classes.title}>
-            {title}
+            {title.length > 53 ? title.slice(0, 50) + "..." : title}
           </Grid>
           <Grid item className={classes.channel}>
-            {channelName}
+            {channelName.toUpperCase()}
           </Grid>
         </Grid>
         <Grid item xs={1}>
@@ -121,6 +118,7 @@ const MiniVideoCard = ({
             anchorElForMore={anchorElForMore}
             onMenuClose={onMenuClose}
             videoCardMoreOptions={videoCardMoreOptions}
+            videoId={id}
           />
         </Grid>
       </Grid>

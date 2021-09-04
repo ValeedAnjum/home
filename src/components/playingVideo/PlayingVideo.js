@@ -9,6 +9,7 @@ import Queue from "./Queue";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { base } from "../../store/util/BASE_API_ADDRESS";
+import VideoInfoAndOptions from "./VideoInfoAndOptions";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => {
 const PlayingVideo = ({ match, VideosForMiniPlayer, ClearTheQueue }) => {
   // console.log(props.match.params.id);
   const [videoSrc, setVideoSrc] = useState(null);
-  const [loadingVideo, setLoadingVideo] = useState(false);
+  const [videoId, setVideoId] = useState(null);
   //for related videos
   const [relatedVideos, setRelatedVideos] = useState([]);
   const [loadingRelatedVideos, setLoadingRelatedVideos] = useState(false);
@@ -33,19 +34,33 @@ const PlayingVideo = ({ match, VideosForMiniPlayer, ClearTheQueue }) => {
   useEffect(() => {
     const fetchVideoIframe = async () => {
       try {
-        // setLoadingVideo(true);
         setVideoSrc(null);
         // const response = await axios.get(`/video/playvideo/${id}`);
         const response = await axios.get(`${base}/video/playvideo/${id}`);
         setVideoSrc(response.data.src);
-        setLoadingVideo(false);
+        setVideoId(response.data._id);
         // console.log(response.data);
       } catch (error) {
-        setLoadingVideo(false);
+        setVideoSrc(null);
+        setVideoId(null);
+      }
+    };
+    const fetchRelatedVideos = async () => {
+      try {
+        setLoadingRelatedVideos(true);
+        // const result = await axios.get("/video/randomvideos/12");
+        const result = await axios.get(`${base}/video/randomvideos/12`);
+        const uniqueVids = result.data.filter((vid) => vid._id !== id);
+        setLoadingRelatedVideos(false);
+        setRelatedVideos(uniqueVids);
+      } catch (error) {
+        setLoadingRelatedVideos(false);
+        console.log(error.message);
       }
     };
     fetchVideoIframe();
     fetchRelatedVideos();
+
     window.addEventListener("scroll", onScrolling);
     return () => {
       window.removeEventListener("scroll", onScrolling);
@@ -53,21 +68,27 @@ const PlayingVideo = ({ match, VideosForMiniPlayer, ClearTheQueue }) => {
   }, [id]);
   useEffect(() => {
     if (!isFetching) return;
+    const fetchRelatedVideosOnScrolling = async () => {
+      try {
+        // const result = await axios.get("/video/randomvideos/12");
+        const result = await axios.get(`${base}/video/randomvideos/12`);
+        const uniqueVids = result.data.filter((vid) => vid._id !== id);
+        setIsFetching(false);
+        setRelatedVideos((data) => [...data, ...uniqueVids]);
+      } catch (error) {
+        setLoadingRelatedVideos(false);
+        console.log(error.message);
+      }
+    };
     fetchRelatedVideosOnScrolling();
-  }, [isFetching]);
+  }, [isFetching, id]);
 
-  const fetchRelatedVideos = async () => {
-    try {
-      setLoadingRelatedVideos(true);
-      // const result = await axios.get("/video/randomvideos/12");
-      const result = await axios.get(`${base}/video/randomvideos/12`);
-      setLoadingRelatedVideos(false);
-      setRelatedVideos(result.data);
-    } catch (error) {
-      setLoadingRelatedVideos(false);
-      console.log(error.message);
-    }
-  };
+  useEffect(() => {
+    return () => {
+      document.getElementsByTagName("title")[0].innerText = "YouTube";
+    };
+  }, []);
+
   const onScrolling = async () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const winInerHeight = window.innerHeight;
@@ -77,21 +98,12 @@ const PlayingVideo = ({ match, VideosForMiniPlayer, ClearTheQueue }) => {
       setIsFetching(true);
     }
   };
-  const fetchRelatedVideosOnScrolling = async () => {
-    try {
-      // const result = await axios.get("/video/randomvideos/12");
-      const result = await axios.get(`${base}/video/randomvideos/12`);
-      setIsFetching(false);
-      setRelatedVideos((data) => [...data, ...result.data]);
-    } catch (error) {
-      setLoadingRelatedVideos(false);
-      console.log(error.message);
-    }
-  };
+
   return (
     <Grid container className={classes.videoplaying}>
       <Grid item md={8} sm={12} xs={12}>
         {videoSrc ? <Video src={videoSrc} /> : <PlayingVideoSkeleton />}
+        {videoId && <VideoInfoAndOptions videoId={videoId} />}
       </Grid>
       <Grid item md={4} sm={12} xs={12}>
         {VideosForMiniPlayer.length >= 1 && (

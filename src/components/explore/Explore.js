@@ -29,7 +29,7 @@ const Explore = () => {
     fetchVideos();
   }, [isFetching]);
 
-  const onScrolling = (event) => {
+  const onScrolling = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const winInerHeight = window.innerHeight;
     const scroolIsAtBottom =
@@ -57,6 +57,7 @@ const Explore = () => {
     try {
       setLoadingVideos(true);
       setVideos([]);
+      // const result = await axios.get(`/video/randomvideos/12`);
       const result = await axios.get(`${base}/video/randomvideos/12`);
       setLoadingVideos(false);
       setIsFetching(false);

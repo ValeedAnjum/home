@@ -19,3 +19,11 @@ export const fetchRelatedVideos = () => async (dispatch) => {
 export const addToQueue = (video) => () => {
   store.dispatch({ type: "MINI_PLAYER_OPEN", payload: video });
 };
+
+export const removeVideoFromQueue = (id) => () => {
+  const videoForMiniPlayers = store.getState().videos.videosForMiniPlayer;
+  const videoAfterFilter = videoForMiniPlayers.filter(
+    (video) => video.id !== id
+  );
+  store.dispatch({ type: "UPDATE_THE_QUEUE", payload: videoAfterFilter });
+};

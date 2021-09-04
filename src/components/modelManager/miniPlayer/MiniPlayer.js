@@ -53,6 +53,17 @@ const useStyles = makeStyles((theme) => {
         backgroundColor: "rgb(0 0 0 / 22%)",
       },
     },
+    clearQueueIconForMobile: {
+      position: "absolute",
+      color: "white",
+      left: "50%",
+      top: "0",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "#00000078",
+      "&:hover": {
+        backgroundColor: "black",
+      },
+    },
     miniPlayerVideoCont: {
       height: "250px",
       position: "relative",
@@ -103,7 +114,22 @@ function MiniPlayer({ location, VideoForMiniplayer, history }) {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchActiveVideoSrc();
+    const fetchAVideoSrc = async () => {
+      const id = VideoForMiniplayer[0].id;
+      setVideoSrc((prevState) => ({
+        src: null,
+        title: prevState.title,
+        id: null,
+      }));
+      // const response = await axios.get(`/video/playvideo/${id}`);
+      const response = await axios.get(`${base}/video/playvideo/${id}`);
+      setVideoSrc({
+        src: response.data.src,
+        title: VideoForMiniplayer[0].title,
+        id: id,
+      });
+    };
+    fetchAVideoSrc();
   }, []);
 
   const toggleExpand = () => {
@@ -125,6 +151,7 @@ function MiniPlayer({ location, VideoForMiniplayer, history }) {
       id: id,
     });
   };
+
   const videoCardClickHan = (video, index) => {
     fetchActiveVideoSrc(video);
     setActiveVideo(index + 1);
@@ -133,7 +160,6 @@ function MiniPlayer({ location, VideoForMiniplayer, history }) {
     history.push(`/video/${id}`);
   };
   if (location.pathname.includes("/video/")) return null;
-
   return (
     <Slide direction="up" in={true} mountOnEnter unmountOnExit>
       <Paper className={classes.miniPlayerMainContainer} elevation={3}>
