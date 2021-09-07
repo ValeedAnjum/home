@@ -14,6 +14,7 @@ import { loadUser } from "./store/actions/authActions";
 import ForgotPassword from "./components/auth/signIn/ForgotPassword";
 import ResetPassword from "./components/auth/signIn/ResetPassword";
 import ModelManager from "./components/modelManager/ModelManager";
+import Error from "./components/error404/Error";
 function App() {
   useEffect(() => {
     store.dispatch(loadUser());
@@ -37,6 +38,7 @@ function App() {
             />
             <Route path="/signup/email" component={SignupEmail} />
             <Route path="/signup/password" component={SignupPassword} />
+            <Route component={Error} />
           </Switch>
         </ScrollToTop>
       </Provider>
