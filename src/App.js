@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import Layout from "./components/layout/Layout";
 import Home from "./components/home/Home";
