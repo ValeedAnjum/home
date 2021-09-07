@@ -19,7 +19,7 @@ function App() {
     store.dispatch(loadUser());
   }, []);
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Provider store={store}>
         <ScrollToTop>
           <Layout />
@@ -40,7 +40,7 @@ function App() {
           </Switch>
         </ScrollToTop>
       </Provider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
