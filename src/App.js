@@ -27,6 +27,7 @@ function App() {
 
           <Switch>
             <Route path="/home" component={Home} />
+            <Route path="/home/check" render={() => <h1>check</h1>} />
             <Route path="/video/:id" component={PlayingVideo} />
             <Route path="/signin/email" component={SigninEmail} />
             <Route path="/signin/password" component={SigninPassword} />
